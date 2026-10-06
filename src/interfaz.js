@@ -19,7 +19,7 @@ const atributosPersonaje = {
     "Gohan": {
         atk_basico: "Masenko",
         atk_especial: "Kamehameha Supremo",
-        fondo: "rgba(61, 232, 45, 0.7)"
+        fondo: "rgba(34, 185, 250, 0.93)"
     },
     "Trunks": {
         atk_basico: "Burning Attack",

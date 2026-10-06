@@ -4,6 +4,7 @@ class Personaje{
     #ki = 100;
     #energia = 100;
     #semilla = 2;
+    #cooldownEspecial = 0;
     #personaje = "";
     #id;
 
@@ -22,6 +23,7 @@ class Personaje{
             vida:${this.#vida},
             energia:${this.#energia},
             semilla:${this.#semilla},
+            cooldownEspecial:${this.#cooldownEspecial},
         `);
     }
 
@@ -35,6 +37,8 @@ class Personaje{
         return this.#energia; }
     getSemilla(){ 
         return this.#semilla; }
+    getCooldownEspecial(){ 
+        return this.#cooldownEspecial; }
     getNombre(){ 
         return this.#nombre; }
     getId(){ 
@@ -51,6 +55,14 @@ class Personaje{
     }
     setSemilla(semilla){ 
         this.#semilla = semilla; 
+    }
+    setCooldownEspecial(cooldown){ 
+        this.#cooldownEspecial = cooldown; 
+    }
+    reducirCooldown(){ 
+        if (this.#cooldownEspecial > 0) {
+            this.#cooldownEspecial--;
+        }
     }
     setPersonaje(personaje){ 
         this.#personaje = personaje; 

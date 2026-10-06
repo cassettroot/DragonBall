@@ -8,7 +8,7 @@
     "dev": "webpack serve --open",
     "build2": "babel src -d controller --watch"
   },
-  "author": "Carlos Diaz",
+  "author": "Carlos Alberto Diaz Meza",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^8.0.4",

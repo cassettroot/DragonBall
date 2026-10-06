@@ -21,19 +21,26 @@ const username2 = document.getElementById("username2");
 const personaje2 = document.getElementById("personaje2");
 const img2 = document.getElementById("img2");
 
+const panel1 = document.getElementById("panel1");
+const panel2 = document.getElementById("panel2");
+
 let pj1 = "", pj2 = "";
 let jugador1, jugador2;
 
 const iniciar_jugador1 = () => {
+    panel1.classList.remove("d-none");
     username1.innerText = nombre1.value;
     personaje1.innerText = pj1;
     img1.src = `./public/img/${pj1}/base.png`;
+    actualizarBarras(jugador1);
 }
 
 const iniciar_jugador2 = () => {
+    panel2.classList.remove("d-none");
     username2.innerText = nombre2.value;
     personaje2.innerText = pj2;
     img2.src = `./public/img/${pj2}/base.png`;
+    actualizarBarras(jugador2);
 }
 
 // Actualiza las barras de vida, ki y energía del jugador que se pasa
@@ -48,6 +55,11 @@ const actualizarBarras = (jugador) => {
 
     document.getElementById(`energia${id}`).style.width = `${jugador.getEnergia()}%`;
     document.getElementById(`energia${id}-txt`).innerText = `${jugador.getEnergia()}%`;
+
+    document.querySelector(`#btn-py${id} button:nth-child(4) .badge`).innerText = jugador.getSemilla();
+
+    const cd = jugador.getCooldownEspecial();
+    document.querySelector(`#btn-py${id} button:nth-child(2) .badge`).innerText = cd > 0 ? cd : "";
 }
 
 nombre1.addEventListener("input", (event) => {
@@ -69,6 +81,22 @@ const msj_error = (msj) => {
         icon: "warning",
         title: "Error!",
         text: msj
+    });
+}
+
+// Pantalla de carga - combate
+const pantallaInicioCombate = () => {
+    Swal.fire({
+        title: "¡INICIA EL COMBATE!",
+        text: `${jugador1.getNombre()} (${jugador1.getPersonaje()}) VS ${jugador2.getNombre()} (${jugador2.getPersonaje()})`,
+        imageUrl: "./public/img/shenlong.webp",
+        imageWidth: 200,
+        imageHeight: 200,
+        imageAlt: "Shenlong",
+        confirmButtonText: "¡A luchar!",
+        confirmButtonColor: "#dc3545",
+        timer: 2500,
+        timerProgressBar: true
     });
 }
 
@@ -103,6 +131,7 @@ btn_player1.addEventListener("click", () => {
 
     if (jugador1 && jugador2) {
         nombres.classList.add("d-none");
+        pantallaInicioCombate();
     }
 });
 
@@ -119,6 +148,7 @@ btn_player2.addEventListener("click", () => {
 
     if (jugador1 && jugador2) {
         nombres.classList.add("d-none");
+        pantallaInicioCombate();
     }
 });
 
@@ -131,6 +161,9 @@ botonesP1[0].addEventListener("click", () => {
 });
 botonesP1[1].addEventListener("click", () => {
     if (!jugador1 || !jugador2) return;
+    if (jugador1.getCooldownEspecial() > 0) {
+        return msj_error(`Debes esperar ${jugador1.getCooldownEspecial()} ${jugador1.getCooldownEspecial() === 1 ? 'movimiento' : 'movimientos'} para usar el ataque especial`);
+    }
     atkEspecial(jugador1, jugador2);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
@@ -142,6 +175,9 @@ botonesP1[2].addEventListener("click", () => {
 });
 botonesP1[3].addEventListener("click", () => {
     if (!jugador1) return;
+    if (jugador1.getSemilla() <= 0) {
+        return msj_error("No hay más semillas");
+    }
     jugador1.curacion();
     actualizarBarras(jugador1);
 });
@@ -155,6 +191,9 @@ botonesP2[0].addEventListener("click", () => {
 });
 botonesP2[1].addEventListener("click", () => {
     if (!jugador1 || !jugador2) return;
+    if (jugador2.getCooldownEspecial() > 0) {
+        return msj_error(`Debes esperar ${jugador2.getCooldownEspecial()} ${jugador2.getCooldownEspecial() === 1 ? 'movimiento' : 'movimientos'} para usar el ataque especial`);
+    }
     atkEspecial(jugador2, jugador1);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
@@ -166,6 +205,9 @@ botonesP2[2].addEventListener("click", () => {
 });
 botonesP2[3].addEventListener("click", () => {
     if (!jugador2) return;
+    if (jugador2.getSemilla() <= 0) {
+        return msj_error("No hay más semillas");
+    }
     jugador2.curacion();
     actualizarBarras(jugador2);
 });
