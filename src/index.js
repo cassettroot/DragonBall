@@ -84,8 +84,10 @@ const msj_error = (msj) => {
     });
 }
 
-// Pantalla de carga - combate
 const pantallaInicioCombate = () => {
+    document.body.classList.remove("bg-inicio");
+    document.body.classList.add("bg-batalla");
+
     Swal.fire({
         title: "¡INICIA EL COMBATE!",
         text: `${jugador1.getNombre()} (${jugador1.getPersonaje()}) VS ${jugador2.getNombre()} (${jugador2.getPersonaje()})`,
@@ -94,7 +96,7 @@ const pantallaInicioCombate = () => {
         imageHeight: 200,
         imageAlt: "Shenlong",
         confirmButtonText: "¡A luchar!",
-        confirmButtonColor: "#dc3545",
+        confirmButtonColor: "#e3880a",
         timer: 2500,
         timerProgressBar: true
     });
@@ -152,29 +154,59 @@ btn_player2.addEventListener("click", () => {
     }
 });
 
+let batallaTerminada = false;
+
+const verificarFinBatalla = () => {
+    if (batallaTerminada || !jugador1 || !jugador2) return;
+
+    if (jugador1.getVida() <= 0 || jugador2.getVida() <= 0) {
+        batallaTerminada = true;
+        const ganador = jugador1.getVida() > 0 ? jugador1 : jugador2;
+        const perdedor = jugador1.getVida() <= 0 ? jugador1 : jugador2;
+
+        setTimeout(() => {
+            Swal.fire({
+                title: "¡FIN DE LA BATALLA!",
+                text: `¡${ganador.getNombre()} (${ganador.getPersonaje()}) ha derrotado a ${perdedor.getNombre()} (${perdedor.getPersonaje()})!`,
+                imageUrl: `./public/img/${ganador.getPersonaje()}/base.png`,
+                imageWidth: 200,
+                imageHeight: 200,
+                imageAlt: "Ganador",
+                confirmButtonText: "Volver al Menú",
+                confirmButtonColor: "#e3880a",
+                allowOutsideClick: false
+            }).then(() => {
+                window.location.reload();
+            });
+        }, 1600);
+    }
+}
+
 const botonesP1 = [...document.getElementById("btn-py1").querySelectorAll("button")];
 botonesP1[0].addEventListener("click", () => {
-    if (!jugador1 || !jugador2) return;
+    if (batallaTerminada || !jugador1 || !jugador2) return;
     atkBasico(jugador1, jugador2);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
+    verificarFinBatalla();
 });
 botonesP1[1].addEventListener("click", () => {
-    if (!jugador1 || !jugador2) return;
+    if (batallaTerminada || !jugador1 || !jugador2) return;
     if (jugador1.getCooldownEspecial() > 0) {
         return msj_error(`Debes esperar ${jugador1.getCooldownEspecial()} ${jugador1.getCooldownEspecial() === 1 ? 'movimiento' : 'movimientos'} para usar el ataque especial`);
     }
     atkEspecial(jugador1, jugador2);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
+    verificarFinBatalla();
 });
 botonesP1[2].addEventListener("click", () => {
-    if (!jugador1) return;
+    if (batallaTerminada || !jugador1) return;
     jugador1.cargaEnergia();
     actualizarBarras(jugador1);
 });
 botonesP1[3].addEventListener("click", () => {
-    if (!jugador1) return;
+    if (batallaTerminada || !jugador1) return;
     if (jugador1.getSemilla() <= 0) {
         return msj_error("No hay más semillas");
     }
@@ -184,27 +216,29 @@ botonesP1[3].addEventListener("click", () => {
 
 const botonesP2 = [...document.getElementById("btn-py2").querySelectorAll("button")];
 botonesP2[0].addEventListener("click", () => {
-    if (!jugador1 || !jugador2) return;
+    if (batallaTerminada || !jugador1 || !jugador2) return;
     atkBasico(jugador2, jugador1);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
+    verificarFinBatalla();
 });
 botonesP2[1].addEventListener("click", () => {
-    if (!jugador1 || !jugador2) return;
+    if (batallaTerminada || !jugador1 || !jugador2) return;
     if (jugador2.getCooldownEspecial() > 0) {
         return msj_error(`Debes esperar ${jugador2.getCooldownEspecial()} ${jugador2.getCooldownEspecial() === 1 ? 'movimiento' : 'movimientos'} para usar el ataque especial`);
     }
     atkEspecial(jugador2, jugador1);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
+    verificarFinBatalla();
 });
 botonesP2[2].addEventListener("click", () => {
-    if (!jugador2) return;
+    if (batallaTerminada || !jugador2) return;
     jugador2.cargaEnergia();
     actualizarBarras(jugador2);
 });
 botonesP2[3].addEventListener("click", () => {
-    if (!jugador2) return;
+    if (batallaTerminada || !jugador2) return;
     if (jugador2.getSemilla() <= 0) {
         return msj_error("No hay más semillas");
     }

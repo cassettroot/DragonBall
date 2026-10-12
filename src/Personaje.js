@@ -4,7 +4,7 @@ class Personaje{
     #ki = 100;
     #energia = 100;
     #semilla = 2;
-    #cooldownEspecial = 0;
+    #cooldownEspecial = 2;
     #personaje = "";
     #id;
 
