@@ -85,6 +85,7 @@ const msj_error = (msj) => {
 }
 
 const pantallaInicioCombate = () => {
+    turno = 1;
     document.body.classList.remove("bg-inicio");
     document.body.classList.add("bg-batalla");
 
@@ -155,6 +156,7 @@ btn_player2.addEventListener("click", () => {
 });
 
 let batallaTerminada = false;
+let turno = 1;
 
 const verificarFinBatalla = () => {
     if (batallaTerminada || !jugador1 || !jugador2) return;
@@ -166,7 +168,7 @@ const verificarFinBatalla = () => {
 
         setTimeout(() => {
             Swal.fire({
-                title: "¡FIN DE LA BATALLA!",
+                title: "¡Batalla Terminada!",
                 text: `¡${ganador.getNombre()} (${ganador.getPersonaje()}) ha derrotado a ${perdedor.getNombre()} (${perdedor.getPersonaje()})!`,
                 imageUrl: `./public/img/${ganador.getPersonaje()}/base.png`,
                 imageWidth: 200,
@@ -185,19 +187,27 @@ const verificarFinBatalla = () => {
 const botonesP1 = [...document.getElementById("btn-py1").querySelectorAll("button")];
 botonesP1[0].addEventListener("click", () => {
     if (batallaTerminada || !jugador1 || !jugador2) return;
+    if (turno !== 1) {
+        return msj_error("No es tu turno de atacar!");
+    }
     atkBasico(jugador1, jugador2);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
+    turno = 2;
     verificarFinBatalla();
 });
 botonesP1[1].addEventListener("click", () => {
     if (batallaTerminada || !jugador1 || !jugador2) return;
+    if (turno !== 1) {
+        return msj_error("No es tu turno de atacar!");
+    }
     if (jugador1.getCooldownEspecial() > 0) {
         return msj_error(`Debes esperar ${jugador1.getCooldownEspecial()} ${jugador1.getCooldownEspecial() === 1 ? 'movimiento' : 'movimientos'} para usar el ataque especial`);
     }
     atkEspecial(jugador1, jugador2);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
+    turno = 2;
     verificarFinBatalla();
 });
 botonesP1[2].addEventListener("click", () => {
@@ -217,19 +227,27 @@ botonesP1[3].addEventListener("click", () => {
 const botonesP2 = [...document.getElementById("btn-py2").querySelectorAll("button")];
 botonesP2[0].addEventListener("click", () => {
     if (batallaTerminada || !jugador1 || !jugador2) return;
+    if (turno !== 2) {
+        return msj_error("No es tu turno de atacar!");
+    }
     atkBasico(jugador2, jugador1);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
+    turno = 1;
     verificarFinBatalla();
 });
 botonesP2[1].addEventListener("click", () => {
     if (batallaTerminada || !jugador1 || !jugador2) return;
+    if (turno !== 2) {
+        return msj_error("No es tu turno de atacar!");
+    }
     if (jugador2.getCooldownEspecial() > 0) {
         return msj_error(`Debes esperar ${jugador2.getCooldownEspecial()} ${jugador2.getCooldownEspecial() === 1 ? 'movimiento' : 'movimientos'} para usar el ataque especial`);
     }
     atkEspecial(jugador2, jugador1);
     actualizarBarras(jugador1);
     actualizarBarras(jugador2);
+    turno = 1;
     verificarFinBatalla();
 });
 botonesP2[2].addEventListener("click", () => {
