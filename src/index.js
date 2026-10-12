@@ -3,7 +3,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Swal from "sweetalert2";
 import Acciones from "./Acciones.js";
-import { atkBasico, atkEspecial } from "./interfaz.js";
+import { atkBasico, atkEspecial, cargaEnergia, curacion } from "./interfaz.js";
 
 const btn_player1 = document.getElementById("btn_player1");
 const btn_player2 = document.getElementById("btn_player2");
@@ -43,7 +43,7 @@ const iniciar_jugador2 = () => {
     actualizarBarras(jugador2);
 }
 
-// Actualiza las barras de vida, ki y energía del jugador que se pasa
+// Actualiza las barras de vida, ki y energía del jugador que se pasa 
 const actualizarBarras = (jugador) => {
     const id = jugador.getId();
 
@@ -212,16 +212,20 @@ botonesP1[1].addEventListener("click", () => {
 });
 botonesP1[2].addEventListener("click", () => {
     if (batallaTerminada || !jugador1) return;
-    jugador1.cargaEnergia();
+    cargaEnergia(jugador1);
     actualizarBarras(jugador1);
 });
 botonesP1[3].addEventListener("click", () => {
-    if (batallaTerminada || !jugador1) return;
+    if (batallaTerminada || !jugador1 || !jugador2) return;
+    if (turno !== 1) {
+        return msj_error("No es tu turno!");
+    }
     if (jugador1.getSemilla() <= 0) {
         return msj_error("No hay más semillas");
     }
-    jugador1.curacion();
+    curacion(jugador1);
     actualizarBarras(jugador1);
+    turno = 2;
 });
 
 const botonesP2 = [...document.getElementById("btn-py2").querySelectorAll("button")];
@@ -252,14 +256,18 @@ botonesP2[1].addEventListener("click", () => {
 });
 botonesP2[2].addEventListener("click", () => {
     if (batallaTerminada || !jugador2) return;
-    jugador2.cargaEnergia();
+    cargaEnergia(jugador2);
     actualizarBarras(jugador2);
 });
 botonesP2[3].addEventListener("click", () => {
-    if (batallaTerminada || !jugador2) return;
+    if (batallaTerminada || !jugador1 || !jugador2) return;
+    if (turno !== 2) {
+        return msj_error("No es tu turno!");
+    }
     if (jugador2.getSemilla() <= 0) {
         return msj_error("No hay más semillas");
     }
-    jugador2.curacion();
+    curacion(jugador2);
     actualizarBarras(jugador2);
+    turno = 1;
 });

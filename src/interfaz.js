@@ -85,4 +85,42 @@ const atkEspecial = (j1, j2) => {
     });
 }
 
-export { atkBasico, atkEspecial };
+const cargaEnergia = (j1) => {
+    j1.cargaEnergia();
+
+    Swal.fire({
+        text: atributosPersonaje[j1.getPersonaje()]?.energia || "Carga de Ki",
+        imageUrl: `./public/img/${j1.getPersonaje()}/energia.png`,
+        imageWidth: 400,
+        imageHeight: 400,
+        position: 'center',
+        width: 600,
+        color: '#fff',
+        background: 'none',
+        imageAlt: 'Carga Ki',
+        backdrop: atributosPersonaje[j1.getPersonaje()]?.fondo,
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
+
+const curacion = (j1) => {
+    j1.curacion();
+
+    Swal.fire({
+        text: atributosPersonaje[j1.getPersonaje()]?.curacion || "Semilla del Ermitaño",
+        imageUrl: `./public/img/${j1.getPersonaje()}/curar.png`,
+        imageWidth: 400,
+        imageHeight: 400,
+        position: 'center',
+        width: 600,
+        color: '#fff',
+        background: 'none',
+        imageAlt: 'Curación',
+        backdrop: atributosPersonaje[j1.getPersonaje()]?.fondo,
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
+
+export { atkBasico, atkEspecial, cargaEnergia, curacion };
