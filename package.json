@@ -2,6 +2,7 @@
   "name": "plantilla",
   "version": "1.0.0",
   "description": "Plantilla basado en ES",
+  "homepage": "https://cassettroot.github.io/DragonBall",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
